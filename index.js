@@ -7,9 +7,6 @@ const app = express();
 // Busca donde tienes definido el port y cámbialo a esto:
 // Este debe ser el ÚNICO listen en todo el archivo
 const port = process.env.PORT || 3000;
-app.listen(port, function() {
-  console.log(`Servidor funcionando en puerto ${port}`);
-});
 
 app.use(cors());
 
