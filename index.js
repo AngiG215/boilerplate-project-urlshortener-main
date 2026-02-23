@@ -4,7 +4,10 @@ const cors = require('cors');
 const app = express();
 
 // 1. CONFIGURACIÓN BÁSICA
-const port = process.env.PORT || 4000;
+const port = 8080; 
+app.listen(port, function() {
+  console.log(`Servidor listo en http://localhost:${port}`);
+});
 
 app.use(cors());
 
@@ -51,15 +54,21 @@ app.post('/api/shorturl', (req, res) => {
 
 // 4. RUTA GET: Aquí es donde el número te lleva a la web original
 app.get('/api/shorturl/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const index = shortUrls.indexOf(id);
+  const id = req.params.id; // Obtenemos el ID de la URL
+  
+  // Buscamos el índice en nuestro array de números cortos
+  // Usamos == (doble igual) para que compare el texto "1" con el número 1 sin problemas
+  const index = shortUrls.findIndex(s => s == id);
   
   if (index === -1) {
     return res.json({ error: "No short URL found" });
   }
   
-  // Redireccionamos a la página real
-  res.redirect(originalUrls[index]);
+  // Obtenemos la URL original usando ese mismo índice
+  const urlDestino = originalUrls[index];
+  
+  // ¡Redireccionamos!
+  res.redirect(urlDestino);
 });
 
 app.listen(port, function() {
