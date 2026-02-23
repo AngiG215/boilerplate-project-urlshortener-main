@@ -6,7 +6,7 @@ const app = express();
 // Basic Configuration
 const port = process.env.PORT || 4000; 
 // Esto significa: Usa el puerto que me dé el servidor, y si no hay ninguno, usa el 4000.
-
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use('/public', express.static(`${process.cwd()}/public`));
