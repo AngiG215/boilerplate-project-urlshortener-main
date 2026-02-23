@@ -4,13 +4,11 @@ const cors = require('cors');
 const app = express();
 
 // 1. CONFIGURACIÓN BÁSICA
-// Busca donde tienes definido el port y cámbialo a esto:
-// Este debe ser el ÚNICO listen en todo el archivo
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-// ESTO ES NUEVO: Necesario para leer lo que envías en el formulario (POST)
+// Middleware para leer datos del formulario POST
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/public', express.static(`${process.cwd()}/public`));
@@ -27,22 +25,19 @@ const shortUrls = [];
 app.post('/api/shorturl', (req, res) => {
   const url = req.body.url;
   
-  // Validación de formato de URL
+  // Validación de formato de URL (muy importante para freeCodeCamp)
   const urlRegex = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/;
   
   if (!urlRegex.test(url)) {
     return res.json({ error: 'invalid url' });
   }
 
-  // Guardamos la URL y le asignamos un número
-  const index = originalUrls.indexOf(url);
+  // Guardamos la URL si no existe
+  let index = originalUrls.indexOf(url);
   if (index === -1) {
     originalUrls.push(url);
     shortUrls.push(shortUrls.length + 1);
-    return res.json({
-      original_url: url,
-      short_url: shortUrls.length
-    });
+    index = originalUrls.length - 1;
   }
 
   res.json({
@@ -51,29 +46,22 @@ app.post('/api/shorturl', (req, res) => {
   });
 });
 
-// 4. RUTA GET: Aquí es donde el número te lleva a la web original
+// 4. RUTA GET: Redirección (Aquí estaba el error de llaves)
 app.get('/api/shorturl/:id', (req, res) => {
   const id = req.params.id;
   
-  // Usamos findIndex con "==" (no "===") para que ignore si es texto o número
+  // Buscamos el índice usando el ID que viene en la URL
   const index = shortUrls.findIndex(s => s == id);
   
   if (index === -1) {
     return res.json({ error: "No short URL found" });
   }
   
-  // IMPORTANTE: Asegúrate de que la URL original se use tal cual
-  const urlDestino = originalUrls[index];
-  res.redirect(urlDestino);
-});
-  
-  // Obtenemos la URL original usando ese mismo índice
-  const urlDestino = originalUrls[index];
-  
-  // ¡Redireccionamos!
-  res.redirect(urlDestino);
+  // Redireccionamos a la URL original
+  res.redirect(originalUrls[index]);
 });
 
+// 5. INICIO DEL SERVIDOR (Único en el archivo)
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
