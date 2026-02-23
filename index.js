@@ -4,9 +4,11 @@ const cors = require('cors');
 const app = express();
 
 // 1. CONFIGURACIÓN BÁSICA
-const port = 8080; 
+// Busca donde tienes definido el port y cámbialo a esto:
+const port = process.env.PORT || 3000; 
+
 app.listen(port, function() {
-  console.log(`Servidor listo en http://localhost:${port}`);
+  console.log(`Node.js escuchando en el puerto ${port}`);
 });
 
 app.use(cors());
