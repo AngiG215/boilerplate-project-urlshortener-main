@@ -53,15 +53,19 @@ app.post('/api/shorturl', (req, res) => {
 
 // 4. RUTA GET: Aquí es donde el número te lleva a la web original
 app.get('/api/shorturl/:id', (req, res) => {
-  const id = req.params.id; // Obtenemos el ID de la URL
+  const id = req.params.id;
   
-  // Buscamos el índice en nuestro array de números cortos
-  // Usamos == (doble igual) para que compare el texto "1" con el número 1 sin problemas
+  // Usamos findIndex con "==" (no "===") para que ignore si es texto o número
   const index = shortUrls.findIndex(s => s == id);
   
   if (index === -1) {
     return res.json({ error: "No short URL found" });
   }
+  
+  // IMPORTANTE: Asegúrate de que la URL original se use tal cual
+  const urlDestino = originalUrls[index];
+  res.redirect(urlDestino);
+});
   
   // Obtenemos la URL original usando ese mismo índice
   const urlDestino = originalUrls[index];
