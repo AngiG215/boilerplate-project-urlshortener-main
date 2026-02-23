@@ -5,9 +5,9 @@ const app = express();
 
 // 1. CONFIGURACIÓN BÁSICA
 // Busca donde tienes definido el port y cámbialo a esto:
-const port = process.env.PORT || 3000; 
+const port = process.env.PORT || 3000;
 
-app.listen(port, function() {
+app.listen(port, () => {
   console.log(`Node.js escuchando en el puerto ${port}`);
 });
 
