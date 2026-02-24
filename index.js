@@ -48,19 +48,18 @@ app.post('/api/shorturl', (req, res) => {
 
 // 5. RUTA GET: REDIRECCIÓN
 app.get('/api/shorturl/:id', (req, res) => {
-  const id = req.params.id;
+  const id = req.params.id; // Aquí captura el número (ej: el 5)
   
-  // Buscamos el objeto por su short_url
-  // Usamos == para que compare el texto de la URL con el número del array
+  // Aquí busca en tu "base de datos" el objeto que tiene ese número
   const entry = urlDatabase.find(item => item.short_url == id);
 
   if (entry) {
-    return res.redirect(entry.original_url);
+    // ESTA ES LA MAGIA: Aquí es donde ocurre la redirección física
+    return res.redirect(entry.original_url); 
   } else {
     return res.json({ error: "No short URL found" });
   }
 });
-
 // 6. ESCUCHA DEL SERVIDOR
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
