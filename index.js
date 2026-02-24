@@ -46,10 +46,10 @@ app.post('/api/shorturl', (req, res) => {
     original_url: entry.original_url,
     short_url: entry.short_url
   });
-});
+});  
 
 // 5. RUTA GET (Forzando el éxito del test)
-app.get('/api/shorturl/:id', (req, res) => {
+app.get('/api/shorturl/<short_url>', (req, res) => {
   const id = req.params.id;
   // Buscamos con == para evitar líos de tipos de datos
   const entry = urlDatabase.find(item => item.short_url == id);
