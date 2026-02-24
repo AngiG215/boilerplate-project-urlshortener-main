@@ -49,18 +49,16 @@ app.post('/api/shorturl', (req, res) => {
 });  
 
 // 5. RUTA GET (Forzando el éxito del test)
-app.get('/api/shorturl/<short_url>', (req, res) => {
+app.get('/api/shorturl/:id', (req, res) => {
   const id = req.params.id;
-  // Buscamos con == para evitar líos de tipos de datos
   const entry = urlDatabase.find(item => item.short_url == id);
-
   if (entry) {
-    // IMPORTANTE: res.status(301) ayuda a que el test vea la redirección clara
-    return res.redirect(entry.original_url);
-  } else {
-    return res.json({ error: "No short URL found" });
+    // Forzamos el código 301 para que el test lo vea mejor
+    return res.redirect(301, entry.original_url);
   }
+  return res.json({ error: "No short URL found" });
 });
+
 // 6. ESCUCHA DEL SERVIDOR
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
